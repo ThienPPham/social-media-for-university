@@ -3,7 +3,9 @@ import {
   EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
+  School ,
 } from "@mui/icons-material";
+// import {SchoolIcon} from '@mui/icons-material/School';
 import { Box, Typography, Divider, useTheme } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
@@ -96,6 +98,21 @@ const UserWidget = ({ userId, picturePath }) => {
 
       {/* THIRD ROW */}
       <Box p="1rem 0">
+        <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
+          <School fontSize="large" sx={{ color: main }} />
+          <Typography color={medium}>khóa học môn Lab</Typography>
+          <EditOutlined sx={{ color: main }} />
+        </Box>
+        {/* <Box display="flex" alignItems="center" gap="1rem">
+          <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
+          <Typography color={medium}>{occupation}</Typography>
+        </Box> */}
+      </Box>
+
+      <Divider />
+
+      {/* FOUR ROW */}
+      <Box p="1rem 0">
         <FlexBetween mb="0.5rem">
           <Typography color={medium}>Who's viewed your profile</Typography>
           <Typography color={main} fontWeight="500">
@@ -112,7 +129,7 @@ const UserWidget = ({ userId, picturePath }) => {
 
       <Divider />
 
-      {/* FOURTH ROW */}
+      {/* FIVE ROW */}
       <Box p="1rem 0">
         <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
           Social Profiles

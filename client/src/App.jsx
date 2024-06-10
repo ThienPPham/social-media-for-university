@@ -7,6 +7,10 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+import NewCourse from "scenes/createCoursePage";
+import CourseDetail from "scenes/courseDetailPage";
+// import Sidebar from "components/SideBar/SideBarComponent";
+// import CoursePage from "scenes/coursePage";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -20,6 +24,7 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route path="/" element={<LoginPage />} />
+
             <Route
               path="/home"
               element={isAuth ? <HomePage /> : <Navigate to="/" />}
@@ -28,6 +33,15 @@ function App() {
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
             />
+
+            {/* <Route
+              path="/course/:userId"
+              element={isAuth ? <CoursePage /> : <Navigate to="/" />}
+            /> */}
+            <Route path="/course/create" element={<NewCourse />} />
+            {/* <Route path="/course/?:userId" element={<CourseDetailPage />} /> */}
+            <Route path="/course/detail" element={<CourseDetail />} />
+
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
