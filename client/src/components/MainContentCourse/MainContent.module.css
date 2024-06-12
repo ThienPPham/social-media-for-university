@@ -20,8 +20,8 @@
 .mainContent h1 {
     font-size: 40px;
     margin-bottom: 10px;
-    /* color: #333; */
-    color: #E4E6EB;
+    color: #333;
+    /* color: #E4E6EB; */
 }
 
 .mainContent p {

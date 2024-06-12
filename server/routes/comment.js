@@ -1,0 +1,16 @@
+import express from 'express';
+import { addReply, createComment, getComments, deleteReply } from '../controllers/comment.js';
+
+
+const router = express.Router();
+
+router.post('/:postId/create', createComment);
+
+router.get('/:postId', getComments);
+
+router.put('/:commentId/reply', addReply)
+
+router.delete('/:commentId/replies/:replyId', deleteReply)
+
+
+export default router;

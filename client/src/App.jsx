@@ -9,6 +9,7 @@ import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import NewCourse from "scenes/createCoursePage";
 import CourseDetail from "scenes/courseDetailPage";
+// import MainContent from "components/MainContentCourse";
 // import Sidebar from "components/SideBar/SideBarComponent";
 // import CoursePage from "scenes/coursePage";
 
@@ -39,9 +40,8 @@ function App() {
               element={isAuth ? <CoursePage /> : <Navigate to="/" />}
             /> */}
             <Route path="/course/create" element={<NewCourse />} />
-            {/* <Route path="/course/?:userId" element={<CourseDetailPage />} /> */}
-            <Route path="/course/detail" element={<CourseDetail />} />
-
+            {/* <Route path="/course/:userId/detail" element={<CourseDetail />} /> */}
+            <Route path="/course/:courseId" element={<CourseDetail />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

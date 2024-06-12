@@ -6,14 +6,14 @@ const courseSchema = mongoose.Schema({
             type: String,
             required: true,
         },
-        firstName: {
-            type: String,
-            required: true,
-        },
-        lastName: {
-            type: String,
-            required: true,
-        },
+        // firstName: {
+        //     type: String,
+        //     required: true,
+        // },
+        // lastName: {
+        //     type: String,
+        //     required: true,
+        // },
         price: {
             type: Number,
             required: true,
@@ -42,6 +42,10 @@ const courseSchema = mongoose.Schema({
             type: String,
             required: true,
         },
+        posts: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post"
+        }],
     }, { timestamps: true } // Automatically add createdAt and updatedAt timestamps
 );
 

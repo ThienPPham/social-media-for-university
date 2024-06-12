@@ -1,23 +1,20 @@
 import express from 'express';
-import { createCourse, getCourses, getUserCourses, updateCourse } from "../controllers/course.js";
+import { createCourse, getCourses, getUserCourses, updateCourse, getCoursesById } from "../controllers/course.js";
 import { verifyToken } from '../middleware/auth.js';
 
 
 const router = express.Router();
-
-// router.post('/courses', createCourse);
-// router.get('/courses', getCourses);
-// router.get('/courses/user/:userId', getUserCourses);
-// router.put('/courses/:id', updateCourse);
 
 
 // READ
 router.get("/", verifyToken, getCourses);
 router.post("/create", verifyToken, createCourse);
 
-router.get('/:userId/courses', getUserCourses);
+router.get('/:userId/detail', getUserCourses);
+router.get('/:courseId', getCoursesById);
 
 
+router.put('/update/:id', verifyToken, updateCourse);
 
 
 // router.get("/", verifyToken, getFeedPosts);
