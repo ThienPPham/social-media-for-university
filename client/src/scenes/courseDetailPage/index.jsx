@@ -1,68 +1,46 @@
-import React from "react";
-import Navbar from "scenes/navbar";
-import MyPostWidget from "scenes/widgets/MyPostWidget";
-import PostsWidget from "scenes/widgets/PostsWidget";
+import React, { useEffect, useState } from "react";
 import { Box, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import UserWidget from "scenes/widgets/UserWidget";
+import Navbar from "scenes/navbar";
+import PostsWidget from "scenes/widgets/PostsWidget";
 import styles from "./courseDetail.module.css";
+import UserWidget from "scenes/widgets/UserWidget";
+import MyCourseWidget from "scenes/widgets/MyCourseWidget";
+import CoursesWidget from "scenes/widgets/CoursesWidget";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
-  const [course, setCourse] = useState("");
-  const [user, setUser] = useState(null);
-  const { userId } = useParams();
+  const [course, setCourse] = useState(null);
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const { _id, picturePath } = useSelector((state) => state.user);
 
   const getCourse = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/courses/${courseId}`,
-        {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await fetch(`http://localhost:3001/courses/${courseId}`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = await response.json();
+      console.log('Course data:', data); // Log the data to verify the response
       setCourse(data);
-      console.log('««««« data »»»»»', data);
     } catch (error) {
       console.error("Error fetching course data:", error);
     }
   };
 
-
-  // const getUserCourse = async () => {
-  //   const response = await fetch(`http://localhost:3001/courses/${userId}/detail`, {
-  //     method: "GET",
-  //     headers: { Authorization: `Bearer ${token}` },
-  //   });
-  //   const data = await response.json();
-  //   setUser(data);
-  //   console.log('«««««  »»»»»', data);
-  // };
-
-  // useEffect(() => {
-  //   getUserCourse();
-  // }, []);
-
   useEffect(() => {
     getCourse();
-    // getUserCourse();
-  }, [courseId , userId] ); 
+  }, [courseId]);
 
   if (!course) {
     return <div>Loading...</div>;
   }
-  // if (!user) return null;
 
   return (
     <Box>
       <Navbar />
-
       <Box
         width="100%"
         padding="2rem 6%"
@@ -70,8 +48,7 @@ const CourseDetail = () => {
         gap="2rem"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          {/* <UserWidget userId={userId} picturePath={user.picturePath} /> */}
-          <Box m="2rem 0" />
+          <UserWidget userId={_id} picturePath={picturePath} />
         </Box>
 
         <Box
@@ -82,28 +59,29 @@ const CourseDetail = () => {
             <main className={styles.mainContent}>
               <div className={styles.mainHeader}>
                 <img
-                  // src={course.imageBanner || "../../assets/group.png"}
-                  src={"../../assets/group.png"}
+                  src={course.imageBanner || "../../assets/group.png"}
                   alt="Main Image"
                   className={styles.mainImage}
                 />
                 <h1>{course.name}</h1>
-                <p>Nhóm Riêng tư · {course.numberOfMembers} thành viên</p>
+                <p>Private Group · {course.numberOfMembers} members</p>
               </div>
               <div className={styles.middleHeader}>
                 <img
                   src={"../../assets/group.png"}
                   alt="Course Image"
                 />
-                <button className={styles.inviteButton}>Mời</button>
+                <button className={styles.inviteButton}>Invite</button>
+              </div>
+              <div className={styles.description}>
+                <p>{course.description}</p>
               </div>
             </main>
           </div>
-
-           {/* <MainContent /> */}
-         
-          <MyPostWidget  />
-          <PostsWidget  /> 
+          <MyCourseWidget picturePath={picturePath} courseId={courseId} />
+          <CoursesWidget courseId={courseId} isCourse />
+          {/* <MyPostWidget /> */}
+          {/* <PostsWidget posts={course.posts} /> */}
         </Box>
       </Box>
     </Box>

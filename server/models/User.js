@@ -40,6 +40,14 @@ const UserSchema = new mongoose.Schema({
         type: Array,
         default: []
     },
+    admin: {
+        type: Boolean,
+        default: false,
+    },
+    host: {
+        type: Boolean,
+        default: false,
+    },
     location: String,
     occupation: String,
     viewedProfile: Number,

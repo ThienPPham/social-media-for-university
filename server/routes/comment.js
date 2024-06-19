@@ -8,9 +8,14 @@ router.post('/:postId/create', createComment);
 
 router.get('/:postId', getComments);
 
-router.put('/:commentId/reply', addReply)
+// router.put('/:commentId/reply', addReply)
 
-router.delete('/:commentId/replies/:replyId', deleteReply)
+// router.delete('/:commentId/replies/:replyId', deleteReply)
+
+router.put('/:commentId/reply/:replyId?', addReply);
+
+// Route to delete a specific reply from a comment or reply
+router.delete('/:commentId/reply/:replyId', deleteReply);
 
 
 export default router;

@@ -8,10 +8,9 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import NewCourse from "scenes/createCoursePage";
-import CourseDetail from "scenes/courseDetailPage";
 // import MainContent from "components/MainContentCourse";
 // import Sidebar from "components/SideBar/SideBarComponent";
-// import CoursePage from "scenes/coursePage";
+import CourseDetail from "scenes/courseDetailPage";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -40,8 +39,7 @@ function App() {
               element={isAuth ? <CoursePage /> : <Navigate to="/" />}
             /> */}
             <Route path="/course/create" element={<NewCourse />} />
-            {/* <Route path="/course/:userId/detail" element={<CourseDetail />} /> */}
-            <Route path="/course/:courseId" element={<CourseDetail />} />
+            <Route path="/courses/:courseId" element={<CourseDetail />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

@@ -40,7 +40,7 @@ const validateSchema = (schema) => async(req, res, next) => {
         return next();
     } catch (err) {
         return res.status(400).json({
-            errors: err ? .errors,
+            errors: err?.errors,
             type: err.name,
             message: 'Xác thực dữ liệu thất bại',
         });

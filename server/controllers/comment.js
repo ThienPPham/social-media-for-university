@@ -1,94 +1,113 @@
-import Comment from "../models/Comment.js";
-// import User from "../models/User.js";
+import { Comment, Reply } from "../models/Comment.js";
 
-const getComments = async (req, res) => {
-    const id = req.params.postId;
+// Controller to get comments for a specific post
+const getComments = async(req, res) => {
+    const { postId } = req.params;
     try {
-        if (id) {
-            const comments = await Comment.find({ postId: id })
+        if (postId) {
+            const comments = await Comment.find({ postId })
                 .sort({ createdAt: 'desc' })
-                // .populate('username', 'firstName lastName');
-
+                .populate('username', 'firstName lastName')
+                .populate({
+                    path: 'replies',
+                    populate: {
+                        path: 'username',
+                        select: 'firstName lastName'
+                    }
+                })
+                .populate({
+                    path: 'replies',
+                    populate: {
+                        path: 'replies',
+                        populate: {
+                            path: 'username',
+                            select: 'firstName lastName'
+                        }
+                    }
+                });
             res.json(comments);
         } else {
             res.status(404).json({ message: 'There is no post ID to get all comments' });
         }
     } catch (error) {
-        res.status(401).json({ message: 'Problem with getting comments from server', error: error });
+        res.status(500).json({ message: 'Problem with getting comments from server', error });
     }
-}
+};
 
-const createComment = async (req, res) => {
-    let id = req.params?.postId;
+// Controller to create a comment for a specific post
+const createComment = async(req, res) => {
+    const { postId } = req.params;
+    const { username, comment } = req.body;
     try {
-        if (id) {
+        if (postId) {
             const commentCreated = await Comment.create({
-                postId: id,
-                username: req.body?.username,
-                comment: req.body?.comment
+                postId,
+                username,
+                comment
             });
-
             const populatedComment = await Comment.findById(commentCreated._id).populate('username', 'firstName lastName');
             res.status(201).json(populatedComment);
         } else {
             res.status(404).json({ message: 'Post with this ID not found!' });
         }
     } catch (error) {
-        res.status(401).json({ message: 'Problem with creating comment on server', error: error });
+        res.status(500).json({ message: 'Problem with creating comment on server', error });
     }
-}
+};
 
-const addReply = async (req, res) => {
-    let id = req.params?.commentId;
+// Controller to add a reply to a specific comment or reply
+const addReply = async(req, res) => {
+    const { commentId, replyId } = req.params;
+    const { username, reply } = req.body;
+
     try {
-        if (id) {
-            const reply = {
-                commentId: id,
-                username: req.body?.username,
-                reply: req.body?.reply,
+        const newReply = await Reply.create({
+            username,
+            reply
+        });
+
+        if (replyId) {
+            const parentReply = await Reply.findById(replyId);
+            if (parentReply) {
+                parentReply.replies.push(newReply._id);
+                await parentReply.save();
+                const populatedReply = await Reply.findById(newReply._id).populate('username', 'firstName lastName');
+                res.json(populatedReply);
+            } else {
+                res.status(404).json({ message: 'Parent reply with this ID not found!' });
             }
-
-            let comment = await Comment.findByIdAndUpdate(
-                { _id: id },
-                { $push: { replies: reply } },
-                { new: true }
-            ).populate('replies.username', 'firstName lastName');
-
-            res.json(comment);
+        } else if (commentId) {
+            const comment = await Comment.findById(commentId);
+            if (comment) {
+                comment.replies.push(newReply._id);
+                await comment.save();
+                const populatedReply = await Reply.findById(newReply._id).populate('username', 'firstName lastName');
+                res.json(populatedReply);
+            } else {
+                res.status(404).json({ message: 'Comment with this ID not found!' });
+            }
         } else {
-            res.status(404).json({ message: 'Comment with this ID not found!' });
+            res.status(400).json({ message: 'Comment ID or Parent reply ID is required!' });
         }
     } catch (error) {
-        res.status(401).json({ message: 'Problem with adding reply on server', error: error });
+        res.status(500).json({ message: 'Problem with adding reply on server', error });
     }
-}
+};
 
-const deleteReply = async (req, res) => {
-    let id = req.params?.commentId;
-    let replyId = req.params?.replyId;
+// Controller to delete a reply from a specific comment or reply
+const deleteReply = async(req, res) => {
+    const { commentId, replyId } = req.params;
     try {
-        if (id && replyId) {
-            let comment = await Comment.findByIdAndUpdate(
-                { _id: id },
-                { $pull: { replies: { _id: replyId } } },
-                { new: true }
-            );
-            res.json(comment);
+        if (replyId) {
+            await Reply.findByIdAndDelete(replyId);
+            await Comment.updateOne({ _id: commentId }, { $pull: { replies: replyId } });
+            await Reply.updateMany({}, { $pull: { replies: replyId } });
+            res.json({ message: 'Reply deleted successfully' });
         } else {
-            res.status(404).json({ message: 'Comment or reply with this ID not found!' });
+            res.status(404).json({ message: 'Reply with this ID not found!' });
         }
     } catch (error) {
-        res.status(401).json({ message: 'Problem with deleting reply on server', error: error });
-    }
-}
-
-export const getCommentsByPostId = async (req, res) => {
-    try {
-        const { postId } = req.params;
-        const comments = await Comment.find({ postId }).populate('username', 'firstName lastName');
-        res.status(200).json(comments);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Problem with deleting reply on server', error });
     }
 };
 

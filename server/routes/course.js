@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCourse, getCourses, getUserCourses, updateCourse, getCoursesById } from "../controllers/course.js";
+import { createCourse, getCourses, getUserCourses, updateCourse, getCoursesById, getCoursePosts } from "../controllers/course.js";
 import { verifyToken } from '../middleware/auth.js';
 
 
@@ -13,6 +13,8 @@ router.post("/create", verifyToken, createCourse);
 router.get('/:userId/detail', getUserCourses);
 router.get('/:courseId', getCoursesById);
 
+router.get('/:courseId/posts', getCoursePosts);
+// router.post('/:courseId/posts', createPostInCourse);
 
 router.put('/update/:id', verifyToken, updateCourse);
 

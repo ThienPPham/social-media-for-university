@@ -7,21 +7,24 @@ const replySchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    commentId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-    },
     reply: {
         type: String,
         required: true,
     },
+    replies: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Reply'
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
     }
 }, {
-    _id: false // Disable _id field in replies
+    timestamps: { createdAt: 'createdAt', updatedAt: false }
 });
+
+// Model for replies
+const Reply = mongoose.model('Reply', replySchema);
 
 // Schema for comments
 const commentSchema = new mongoose.Schema({
@@ -39,11 +42,14 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    replies: [replySchema]
+    replies: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Reply'
+    }]
 }, {
     timestamps: true
 });
 
 const Comment = mongoose.model('Comment', commentSchema);
 
-export default Comment;
+export { Comment, Reply };
