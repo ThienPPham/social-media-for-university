@@ -7,12 +7,15 @@ const getComments = async(req, res) => {
         if (postId) {
             const comments = await Comment.find({ postId })
                 .sort({ createdAt: 'desc' })
-                .populate('username', 'firstName lastName')
+                .populate({
+                    path: 'userId',
+                    select: 'firstName lastName picturePath'
+                })
                 .populate({
                     path: 'replies',
                     populate: {
-                        path: 'username',
-                        select: 'firstName lastName'
+                        path: 'userId',
+                        select: 'firstName lastName picturePath'
                     }
                 })
                 .populate({
@@ -20,8 +23,8 @@ const getComments = async(req, res) => {
                     populate: {
                         path: 'replies',
                         populate: {
-                            path: 'username',
-                            select: 'firstName lastName'
+                            path: 'userId',
+                            select: 'firstName lastName picturePath'
                         }
                     }
                 });
@@ -34,18 +37,19 @@ const getComments = async(req, res) => {
     }
 };
 
+
 // Controller to create a comment for a specific post
 const createComment = async(req, res) => {
     const { postId } = req.params;
-    const { username, comment } = req.body;
+    const { userId, comment } = req.body;
     try {
         if (postId) {
             const commentCreated = await Comment.create({
                 postId,
-                username,
+                userId,
                 comment
             });
-            const populatedComment = await Comment.findById(commentCreated._id).populate('username', 'firstName lastName');
+            const populatedComment = await Comment.findById(commentCreated._id).populate('userId', 'firstName lastName');
             res.status(201).json(populatedComment);
         } else {
             res.status(404).json({ message: 'Post with this ID not found!' });
@@ -55,14 +59,15 @@ const createComment = async(req, res) => {
     }
 };
 
+
 // Controller to add a reply to a specific comment or reply
 const addReply = async(req, res) => {
     const { commentId, replyId } = req.params;
-    const { username, reply } = req.body;
+    const { userId, reply } = req.body;
 
     try {
         const newReply = await Reply.create({
-            username,
+            userId,
             reply
         });
 
@@ -71,7 +76,7 @@ const addReply = async(req, res) => {
             if (parentReply) {
                 parentReply.replies.push(newReply._id);
                 await parentReply.save();
-                const populatedReply = await Reply.findById(newReply._id).populate('username', 'firstName lastName');
+                const populatedReply = await Reply.findById(newReply._id).populate('userId', 'firstName lastName');
                 res.json(populatedReply);
             } else {
                 res.status(404).json({ message: 'Parent reply with this ID not found!' });
@@ -81,7 +86,7 @@ const addReply = async(req, res) => {
             if (comment) {
                 comment.replies.push(newReply._id);
                 await comment.save();
-                const populatedReply = await Reply.findById(newReply._id).populate('username', 'firstName lastName');
+                const populatedReply = await Reply.findById(newReply._id).populate('userId', 'firstName lastName');
                 res.json(populatedReply);
             } else {
                 res.status(404).json({ message: 'Comment with this ID not found!' });
@@ -93,6 +98,7 @@ const addReply = async(req, res) => {
         res.status(500).json({ message: 'Problem with adding reply on server', error });
     }
 };
+
 
 // Controller to delete a reply from a specific comment or reply
 const deleteReply = async(req, res) => {

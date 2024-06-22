@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 // Schema for replies
 const replySchema = new mongoose.Schema({
-    username: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -33,7 +33,7 @@ const commentSchema = new mongoose.Schema({
         ref: 'Post',
         required: true,
     },
-    username: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,

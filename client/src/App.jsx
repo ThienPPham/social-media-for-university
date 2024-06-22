@@ -13,9 +13,11 @@ import NewCourse from "scenes/createCoursePage";
 import CourseDetail from "scenes/courseDetailPage";
 
 function App() {
+  // const { postId } = useParams();
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const isAuth = Boolean(useSelector((state) => state.token));
+
 
   return (
     <div className="app">
@@ -33,11 +35,6 @@ function App() {
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
             />
-
-            {/* <Route
-              path="/course/:userId"
-              element={isAuth ? <CoursePage /> : <Navigate to="/" />}
-            /> */}
             <Route path="/course/create" element={<NewCourse />} />
             <Route path="/courses/:courseId" element={<CourseDetail />} />
           </Routes>

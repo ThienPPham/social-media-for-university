@@ -80,8 +80,7 @@ const CourseDetail = () => {
           </div>
           <MyCourseWidget picturePath={picturePath} courseId={courseId} />
           <CoursesWidget courseId={courseId} isCourse />
-          {/* <MyPostWidget /> */}
-          {/* <PostsWidget posts={course.posts} /> */}
+          
         </Box>
       </Box>
     </Box>
