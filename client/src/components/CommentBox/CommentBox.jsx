@@ -44,34 +44,34 @@ const CommentBox = ({ postId, onCommentAdded }) => {
   };
 
   return (
-    <WidgetWrapper>
-      <FlexBetween gap="1.5rem">
-        <UserImage image={picturePath} />
-        <InputBase
-          placeholder="What's on your mind..."
-          onChange={(e) => setPost(e.target.value)}
-          value={post}
-          sx={{
-            width: "100%",
-            backgroundColor: palette.neutral.light,
-            borderRadius: "2rem",
-            padding: "1rem 2rem",
-          }}
-        />
-      </FlexBetween>
-      <Button
-        disabled={!post}
-        onClick={handlePost}
-        sx={{
-          color: palette.background.alt,
-          backgroundColor: palette.primary.main,
-          borderRadius: "3rem",
-          marginTop: "1rem",
-        }}
-      >
-        POST
-      </Button>
-    </WidgetWrapper>
+    <WidgetWrapper mt="1rem">
+          <FlexBetween gap="1rem">
+            <UserImage image={picturePath} />
+            <InputBase
+              placeholder="Viết bình luận"
+              value={post}
+              onChange={(e) => setPost(e.target.value)}
+              sx={{
+                width: "100%",
+                backgroundColor: palette.neutral.light,
+                borderRadius: "2rem",
+                padding: "0.5rem 1rem",
+              }}
+            />
+            <Button
+              disabled={!post}
+              onClick={handlePost}
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: palette.primary.main,
+                borderRadius: "3rem",
+                minWidth: "5rem",
+              }}
+            >
+              Post
+            </Button>
+          </FlexBetween>
+        </WidgetWrapper>
   );
 };
 

@@ -130,7 +130,7 @@ const UserWidget = ({ userId, picturePath }) => {
       </Box> */}
       <Box p="1rem 0">
         <Typography fontSize="1.25rem" fontWeight="500" mb="0.5rem">
-          Courses
+          Khóa học do bạn quản lí
         </Typography>
         {courses.length > 0 ? (
           courses.map((course) => (
@@ -139,8 +139,8 @@ const UserWidget = ({ userId, picturePath }) => {
               alignItems="center"
               gap="1rem"
               mb="0.5rem"
-              onClick={() => navigate(`/courses/${course._id}`)} 
-              style={{ cursor: "pointer" }} 
+              onClick={() => navigate(`/courses/${course._id}`)}
+              style={{ cursor: "pointer" }}
             >
               <School fontSize="large" sx={{ color: main }} />
               <Typography color={dark} fontWeight="500">
@@ -156,7 +156,7 @@ const UserWidget = ({ userId, picturePath }) => {
       <Divider />
 
       {/* FOUR ROW */}
-      <Box p="1rem 0">
+      {/* <Box p="1rem 0">
         <FlexBetween mb="0.5rem">
           <Typography color={medium}>Who's viewed your profile</Typography>
           <Typography color={main} fontWeight="500">
@@ -169,6 +169,12 @@ const UserWidget = ({ userId, picturePath }) => {
             {impressions}
           </Typography>
         </FlexBetween>
+      </Box> */}
+
+      <Box p="1rem 0">
+        <Typography fontSize="1.25rem" fontWeight="500" mb="0.5rem">
+          Khóa học mà bạn tham gia
+        </Typography>
       </Box>
 
       <Divider />

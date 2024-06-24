@@ -16,31 +16,31 @@ const courseSchema = mongoose.Schema({
         // },
         price: {
             type: Number,
-            required: true,
+            // required: true,
         },
         name: {
             type: String,
-            required: true,
+            // required: true,
         },
         date: {
             type: Date,
-            required: true,
+            // required: true,
         },
         numberOfMembers: {
             type: Number,
-            required: true,
+            // required: true,
         },
         description: {
             type: String,
-            required: true,
+            // required: true,
         },
         imageBanner: {
             type: String,
-            required: true,
+            // required: true,
         },
         document: {
             type: String,
-            required: true,
+            // required: true,
         },
         posts: [{
             type: mongoose.Schema.Types.ObjectId,

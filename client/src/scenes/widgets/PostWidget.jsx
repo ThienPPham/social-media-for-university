@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { ChatBubbleOutlineOutlined, ShareOutlined } from "@mui/icons-material";
+import { ChatBubbleOutlineOutlined, FavoriteBorderOutlined, FavoriteOutlined, ShareOutlined } from "@mui/icons-material";
 import CommentBox from "components/CommentBox/CommentBox";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
@@ -22,9 +22,14 @@ const PostWidget = ({
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
+  const isLiked = Boolean(likes[loggedInUserId]);
+  const likeCount = Object.keys(likes).length;
+
+
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
+  const primary = palette.primary.main;
 
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -139,13 +144,26 @@ const PostWidget = ({
       )}
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
+
+        <FlexBetween gap="0.3rem">
+             <IconButton onClick={patchLike}>
+              {isLiked ? (
+                <FavoriteOutlined sx={{ color: primary }} />
+              ) : (
+                <FavoriteBorderOutlined />
+              )}
+            </IconButton>
+            <Typography>{likeCount}</Typography> 
+          </FlexBetween>
+
           <IconButton onClick={toggleComments}>
             <ChatBubbleOutlineOutlined />
           </IconButton>
         </FlexBetween>
-        <IconButton onClick={patchLike}>
+
+        {/* <IconButton onClick={patchLike}>
           <ShareOutlined />
-        </IconButton>
+        </IconButton> */}
       </FlexBetween>
 
       {showComments && (
@@ -154,7 +172,7 @@ const PostWidget = ({
           {loading && <Typography>Loading comments...</Typography>}
           {error && <Typography color="error">{error}</Typography>}
           {!loading && !error && comments.length === 0 && (
-            <Typography>No comments available.</Typography>
+            <Typography></Typography>
           )}
           {!loading && !error && comments.length > 0 && (
             <Box mt="1rem">

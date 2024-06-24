@@ -54,7 +54,7 @@ const ReplyComment = ({ commentId, onReplyAdded, fetchReplies }) => {
           <FlexBetween gap="1rem">
             <UserImage image={picturePath} />
             <InputBase
-              placeholder="Write a reply..."
+              placeholder="Viết bình luận"
               value={post}
               onChange={(e) => setPost(e.target.value)}
               sx={{

@@ -8,8 +8,6 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import NewCourse from "scenes/createCoursePage";
-// import MainContent from "components/MainContentCourse";
-// import Sidebar from "components/SideBar/SideBarComponent";
 import CourseDetail from "scenes/courseDetailPage";
 
 function App() {
@@ -17,7 +15,6 @@ function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const isAuth = Boolean(useSelector((state) => state.token));
-
 
   return (
     <div className="app">
@@ -35,8 +32,19 @@ function App() {
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
             />
-            <Route path="/course/create" element={<NewCourse />} />
-            <Route path="/courses/:courseId" element={<CourseDetail />} />
+
+            <Route
+              path="/course/create"
+              element={isAuth ? <NewCourse /> : <Navigate to="/" />}
+            />
+
+            <Route
+              path="/courses/:courseId"
+              element={isAuth ? <CourseDetail /> : <Navigate to="/" />}
+            />
+
+            {/* <Route path="/course/create" element={<NewCourse />} />
+            <Route path="/courses/:courseId" element={<CourseDetail />} /> */}
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
