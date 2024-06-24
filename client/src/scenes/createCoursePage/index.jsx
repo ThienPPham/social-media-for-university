@@ -62,26 +62,49 @@ const NewCourse = () => {
   if (!user) return null;
   //Get User (End)
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   // const name = nameCourse;
+  //   // const description = desCourse;
+  //   // const userId = _id;
+  //   alert(_id);
+  //   const formData = new FormData();
+  //   formData.append("userId", _id);
+  //   formData.append("name", nameCourse);
+  //   formData.append("description", desCourse);
+  //   // const course = { userId, name, description };
+  //   const response = await fetch("http://localhost:3001/courses/create", {
+  //     method: "POST",
+  //     // body: JSON.stringify(course),
+  //     body: JSON.stringify(formData),
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const name = nameCourse;
-    // const description = desCourse;
-    // const userId = _id;
-    alert(_id);
-    const formData = new FormData();
-    formData.append("userId", _id);
-    formData.append("name", nameCourse);
-    formData.append("description", desCourse);
-    // const course = { userId, name, description };
+
     const response = await fetch("http://localhost:3001/courses/create", {
       method: "POST",
-      // body: JSON.stringify(course),
-      body: formData,
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Attach the token to the request
+      },
+      body: JSON.stringify({
+        userId: _id,
+        name: nameCourse,
+        // imageBanner: courseImage
+        description: desCourse,
+      }),
     });
-    const course = await response.json();
-    dispatch(setPosts({ course }));
-    console.log("course", course);
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Course created successfully:", data);
+    } else {
+      console.error("Error creating course:", data.message);
+    }
   };
   return (
     <Box>
@@ -126,7 +149,7 @@ const NewCourse = () => {
               value={nameCourse}
               required
             />
-            <label htmlFor="course-name">Mô tả khóa học:</label>
+            <label htmlFor="course-des">Mô tả khóa học:</label>
             <input
               type="text"
               id="course-description"

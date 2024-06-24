@@ -6,7 +6,11 @@ import Post from "../models/Post.js";
 export const createCourse = async (req, res) => {
   try {
     // const { userId, price, name, date, numberOfMembers, description, imageBanner, document, posts } = req.body;
+    console.log("Starting Create Course!!!!!!!!");
     const { userId, name, description } = req.body;
+    console.log("This is UserID: " + userId);
+    console.log("This is name: " + name);
+    console.log("This is description: " + description);
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
