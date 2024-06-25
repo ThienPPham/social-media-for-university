@@ -55,7 +55,6 @@ import {
       dispatch(setPosts({ posts }));
       setImage(null);
       setPost("");
-      console.log('««««« posts »»»»»', posts);
     };
   
     return (

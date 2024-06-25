@@ -1,6 +1,22 @@
 import React, { useState } from "react";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { ChatBubbleOutlineOutlined, FavoriteBorderOutlined, FavoriteOutlined, ShareOutlined } from "@mui/icons-material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  useTheme,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+import {
+  ChatBubbleOutlineOutlined,
+  FavoriteBorderOutlined,
+  FavoriteOutlined,
+  Delete as DeleteIcon,
+} from "@mui/icons-material";
 import CommentBox from "components/CommentBox/CommentBox";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
@@ -8,6 +24,7 @@ import ReplyComment from "components/ReplyComment/ReplyComment";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
+import FriendComment from "components/FriendComment";
 
 const PostWidget = ({
   postId,
@@ -18,14 +35,13 @@ const PostWidget = ({
   picturePath,
   userPicturePath,
   likes,
+  onDelete,
 }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
-
-
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -35,6 +51,7 @@ const PostWidget = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showComments, setShowComments] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const fetchComments = async () => {
     setLoading(true);
@@ -98,16 +115,19 @@ const PostWidget = ({
   // Function to fetch all replies of a comment
   const fetchReplies = async (commentId) => {
     try {
-      const response = await fetch(`http://localhost:3001/comments/${commentId}/replies`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:3001/comments/${commentId}/replies`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.ok) {
         const repliesData = await response.json();
         // Find the comment in state and update its replies
-        const updatedComments = comments.map(comment => {
+        const updatedComments = comments.map((comment) => {
           if (comment._id === commentId) {
             return { ...comment, replies: repliesData };
           }
@@ -122,6 +142,40 @@ const PostWidget = ({
     }
   };
 
+  const deletePost = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        onDelete(postId); // Notify parent component to remove the post from its state
+      } else {
+        // Handle error
+        console.error("Failed to delete post:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
+  const handleDeleteClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    deletePost();
+    setOpen(false);
+  };
+
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
@@ -129,6 +183,8 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        deletePost={deletePost}
+        handleDeleteClick={handleDeleteClick}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
@@ -144,23 +200,20 @@ const PostWidget = ({
       )}
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
-
-        <FlexBetween gap="0.3rem">
-             <IconButton onClick={patchLike}>
+          <FlexBetween gap="0.3rem">
+            <IconButton onClick={patchLike}>
               {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
                 <FavoriteBorderOutlined />
               )}
             </IconButton>
-            <Typography>{likeCount}</Typography> 
+            <Typography>{likeCount}</Typography>
           </FlexBetween>
-
           <IconButton onClick={toggleComments}>
             <ChatBubbleOutlineOutlined />
           </IconButton>
         </FlexBetween>
-
         {/* <IconButton onClick={patchLike}>
           <ShareOutlined />
         </IconButton> */}
@@ -178,7 +231,7 @@ const PostWidget = ({
             <Box mt="1rem">
               {comments.map((comment) => (
                 <div key={comment._id}>
-                  <Friend
+                  <FriendComment
                     friendId={comment.userId._id}
                     name={`${comment.userId.firstName} ${comment.userId.lastName}`}
                     userPicturePath={comment.userId.picturePath}
@@ -195,18 +248,23 @@ const PostWidget = ({
                       fetchReplies={fetchReplies} // Pass fetchReplies function to ReplyComment
                     />
                     {/* Render replies */}
-                    {comment.replies && comment.replies.map(reply => (
-                      <Box key={reply._id} mt={1}>
-                        <Friend
-                          friendId={reply.userId._id}
-                          name={`${reply.userId.firstName} ${reply.userId.lastName}`}
-                          userPicturePath={reply.userId.picturePath}
-                        />
-                        <Typography variant="body2" color={main} style={{ marginLeft: "72px" }}>
-                          {reply.reply}
-                        </Typography>
-                      </Box>
-                    ))}
+                    {comment.replies &&
+                      comment.replies.map((reply) => (
+                        <Box key={reply._id} mt={1}>
+                          <Friend
+                            friendId={reply.userId._id}
+                            name={`${reply.userId.firstName} ${reply.userId.lastName}`}
+                            userPicturePath={reply.userId.picturePath}
+                          />
+                          <Typography
+                            variant="body2"
+                            color={main}
+                            style={{ marginLeft: "72px" }}
+                          >
+                            {reply.reply}
+                          </Typography>
+                        </Box>
+                      ))}
                   </Typography>
                 </div>
               ))}
@@ -214,6 +272,28 @@ const PostWidget = ({
           )}
         </>
       )}
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this post?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </WidgetWrapper>
   );
 };

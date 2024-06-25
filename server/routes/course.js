@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCourse, getCourses, getUserCourses, updateCourse, getCoursesById, getCoursePosts } from "../controllers/course.js";
+import { createCourse, getCourses, getUserCourses, updateCourse, getCoursesById, getCoursePosts, deleteCourse } from "../controllers/course.js";
 import { verifyToken } from '../middleware/auth.js';
 
 
@@ -12,14 +12,13 @@ router.post("/create", verifyToken, createCourse);
 
 router.get('/:userId/detail', getUserCourses);
 router.get('/:courseId', getCoursesById);
-
 router.get('/:courseId/posts', getCoursePosts);
-// router.post('/:courseId/posts', createPostInCourse);
 
+// Update
 router.put('/update/:id', verifyToken, updateCourse);
 
+// Delete
+router.delete('/:id', verifyToken, deleteCourse);
 
-// router.get("/", verifyToken, getFeedPosts);
-// router.get("/:userId/posts", verifyToken, getUserPosts);
 
 export default router;

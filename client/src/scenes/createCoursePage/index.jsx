@@ -23,7 +23,7 @@ const NewCourse = () => {
         "Authorization": `Bearer ${token}` // Attach the token to the request
       },
       body: JSON.stringify({
-        userId: _id, // Replace with actual user ID
+        userId: _id, 
         name: courseName,
         imageBanner: courseImage
       })
@@ -32,10 +32,8 @@ const NewCourse = () => {
     const data = await response.json();
 
     if (response.ok) {
-      // Handle successful response
       console.log("Course created successfully:", data);
     } else {
-      // Handle error response
       console.error("Error creating course:", data.message);
     }
   };
