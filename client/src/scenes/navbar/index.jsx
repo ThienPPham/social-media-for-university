@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Box,
   IconButton,
@@ -21,12 +21,16 @@ import {
   Close,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { setMode, setLogout } from "state";
+import { setMode, setLogout } from "state"; // Adjust the import path if needed
 import { useNavigate } from "react-router-dom";
-import FlexBetween from "components/FlexBetween";
+import FlexBetween from "components/FlexBetween"; // Adjust the import path if needed
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
+  const [showCourses, setShowCourses] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -40,9 +44,62 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
+  const token = useSelector((state) => state.token);
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/courses/", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await response.json();
+        setCourses(data);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+      }
+    };
+
+    fetchCourses();
+  }, [token]);
+
+  const handleSearch = () => {
+    if (searchQuery) {
+      const filtered = courses.filter(course =>
+        course.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredCourses(filtered);
+    } else {
+      setFilteredCourses(courses);
+    }
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchQuery, courses]);
+
+  const handleInputClick = () => {
+    setFilteredCourses(courses);
+    setShowCourses(true);
+  };
+
+  const handleClickOutside = (event) => {
+    if (inputRef.current && !inputRef.current.contains(event.target)) {
+      setShowCourses(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween padding="1rem 6%" backgroundColor={alt} position="relative">
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"
@@ -59,17 +116,56 @@ const Navbar = () => {
           Sociopedia
         </Typography>
         {isNonMobileScreens && (
-          <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            padding="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
+          <Box position="relative" ref={inputRef}>
+            <FlexBetween
+              backgroundColor={neutralLight}
+              borderRadius="9px"
+              gap="3rem"
+              padding="0.1rem 1.5rem"
+            >
+              <InputBase
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClick={handleInputClick}
+                onFocus={() => setShowCourses(true)}
+              />
+              <IconButton onClick={handleSearch}>
+                <Search />
+              </IconButton>
+            </FlexBetween>
+            {/* DISPLAY COURSES */}
+            {showCourses && filteredCourses.length > 0 && (
+              <Box
+                position="absolute"
+                top="100%"
+                left="0"
+                width="100%"
+                mt={1}
+                backgroundColor={neutralLight}
+                borderRadius="9px"
+                boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
+                zIndex="1000"
+              >
+                {filteredCourses.map((course) => (
+                  <Box key={course._id} p={1} borderBottom="1px solid #ccc">
+                    <Typography
+                      variant="h6"
+                      onClick={() => navigate(`/courses/${course._id}`)}
+                      sx={{
+                        "&:hover": {
+                          cursor: "pointer",
+                          textDecoration: "underline",
+                        },
+                      }}
+                    >
+                      {course.name}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
         )}
       </FlexBetween>
 
