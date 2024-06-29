@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import HomePage from "scenes/homePage";
 import LoginPage from "scenes/loginPage";
 import ProfilePage from "scenes/profilePage";
+import Topbar from "scenes/global/Topbar";
 import AdminApp from "AdminApp";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -29,7 +30,6 @@ function App() {
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
             />
-            {/* <Route path="/admin/*" element={isAuth ? <AdminApp /> : <Navigate to="/" />} />  */}
             <Route path="/admin/*" element={<AdminApp />} />
           </Routes>
         </ThemeProvider>
