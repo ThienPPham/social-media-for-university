@@ -10,11 +10,21 @@ body,
 }
 
 /* Admin page */
+.content {
+  height: 100%;
+  width: 100%;
+  font-family: "Source Sans Pro", sans-serif;
+}
+.adminApp {
+  height: 100%;
+  width: 100%;
+  font-family: "Rubik", sans-serif;
+}
 
-/* .app {
+.adminApp {
   display: flex;
   position: relative;
-} */
+}
 
 ::-webkit-scrollbar {
   width: 10px;
