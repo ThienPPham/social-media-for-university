@@ -106,17 +106,27 @@ const Team = () => {
       headerName: 'Action',
       flex: 1,
       renderCell: ({ row }) => {
+        const isUserActive = row.status === 'active';
         return (
           <Button
             variant="contained"
-            color="error"
+            color={isUserActive ? "error" : "secondary"}
+            onClick={() => updateUserStatus(row.id, isUserActive ? "inactive" : "active")}
           >
-            Restrictions
+            {isUserActive ? "Restrictions" : "Active"}
           </Button>
         );
       },
     },
   ];  
+
+  const updateUserStatus = async (userID, status) => {
+    try {
+      await axios.put(`http://localhost:3001/users/${userID}/status`, { status });
+      fetchUsers(); 
+    } catch (error) {
+    }
+  };
 
   return (
     <Box m="20px">
