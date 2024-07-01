@@ -33,12 +33,24 @@ const UserSchema = new mongoose.Schema(
             type: Array,
             default: []
         },
+        admin: {
+            type: Boolean,
+            default: false,
+        },
+        host: {
+            type: Boolean,
+            default: false,
+        },
+        status: {
+            type: String,
+            default: "active"
+        },
         location: String,
         occupation: String,
         viewedProfile: Number,
         impressions: Number,
+        phoneNumber: String,
     }, { timestamps: true }
 );
-
 const User = mongoose.model("User", UserSchema)
 export default User;
