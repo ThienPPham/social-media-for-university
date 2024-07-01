@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, Button, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../adminTheme";
-import { mockDataTeam } from 'data/mockData';
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
@@ -27,23 +26,33 @@ const Team = () => {
     fetchUsers();
   }, []);
 
+  const formattedUsers = users.map(user => ({
+    admin: user.admin,
+    host: user.host,
+    id: user._id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    fullname:user.firstName+" "+user.lastName,
+    email: user.email,
+    password: user.password,
+    picturePath: user.picturePath,
+    friends: user.friends,
+    location: user.location,
+    occupation: user.occupation,
+    viewedProfile: user.viewedProfile,
+    impressions: user.impressions,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    status: user.status
+  }));
+
   const columns = [
     { field: 'id', headerName: 'ID' },
     {
-      field: 'name',
-      headerName: 'First Name',
+      field: 'fullname',
+      headerName: 'Full Name',
       flex: 1,
       cellClassName: 'name-column--cell',
-    },
-    {
-      field: 'age',
-      headerName: 'Age',
-      flex: 1,
-    },
-    {
-      field: 'phone',
-      headerName: 'Phone Number',
-      flex: 1,
     },
     {
       field: 'email',
@@ -51,15 +60,25 @@ const Team = () => {
       flex: 1,
     },
     {
+      field: 'location',
+      headerName: 'Location',
+      flex: 1,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+    },
+    {
       field: 'accessLevel',
       headerName: 'Access Level',
       flex: 1,
       renderCell: ({ row: { admin, host } }) => {
-        const access = admin ? 'admin' : host ? 'manager' : 'user';
+        const access = admin ? 'admin' : host ? 'host' : 'user';
         return (
           <Box
             width="60%"
-            m="0 auto"
+            m="10px auto 0 auto"
             p="5px"
             display="flex"
             justifyContent="center"
@@ -90,8 +109,7 @@ const Team = () => {
         return (
           <Button
             variant="contained"
-            color="secondary"
-            href={`banUser?userID=${row.id}`}
+            color="error"
           >
             Restrictions
           </Button>
@@ -132,7 +150,7 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
+        <DataGrid checkboxSelection rows={formattedUsers} columns={columns} />
       </Box>
     </Box>
   );
