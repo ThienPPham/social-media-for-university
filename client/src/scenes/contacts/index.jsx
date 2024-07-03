@@ -1,56 +1,124 @@
-import { Box } from "@mui/material";
+import { useEffect, useState } from 'react';
+import { Box ,Button,Typography} from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../adminTheme";
-import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
-
+import axios from 'axios';
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [posts, setPosts] = useState([]);
 
+  // Function to fetch posts data from backend
+  const fetchPosts = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await axios.get('http://localhost:3001/posts', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPosts(response.data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const formattedPosts = posts.map(post => ({
+    id: post._id,
+    userId: post.userId,
+    firstName: post.firstName,
+    lastName: post.lastName,
+    fullname:post.firstName+" "+post.lastName,
+    location: post.location,
+    description: post.description,
+    picturePath: post.picturePath,
+    userPicturePath: post.userPicturePath,
+    report: post.report,
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+  }));
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Registrar ID" },
+    { field: "fullname", headerName: "Người đăng" },
     {
-      field: "name",
-      headerName: "Name",
+      field: "description",
+      headerName: "Nội dung",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "age",
-      headerName: "Age",
+      field: "createdAt",
+      headerName: "Ngày đăng",
       type: "number",
       headerAlign: "left",
       align: "left",
     },
     {
-      field: "phone",
-      headerName: "Phone Number",
+      field: "picturePath",
+      headerName: "Hình ảnh",
       flex: 1,
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: 'report',
+      headerName: 'Report',
       flex: 1,
+      renderCell: ({ row }) => {
+        const isReported = row.report === true;
+        return (
+          <Box
+            width="60%"
+            m="10px 0 0 0"
+            p="5px"
+            display="flex"
+            justifyContent="center"
+            backgroundColor={isReported ? colors.redAccent[600] : colors.greenAccent[600]}
+            borderRadius="4px"
+          >
+            <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
+              {isReported ? "True" : "False"}
+            </Typography>
+          </Box>
+        );
+      },
     },
     {
-      field: "address",
-      headerName: "Address",
+      field: 'action',
+      headerName: 'Action',
       flex: 1,
-    },
-    {
-      field: "city",
-      headerName: "City",
-      flex: 1,
-    },
-    {
-      field: "zipCode",
-      headerName: "Zip Code",
-      flex: 1,
+      renderCell: ({ row }) => {
+        return (
+          <Button
+            variant="contained"
+            color={"error"}
+            onClick={() => deletePost(row.id)}
+          >
+            Delete
+          </Button>
+        );
+      },
     },
   ];
+// Function to delete post
+const deletePost = async (postId) => {
+  const token = localStorage.getItem('token');
+  try {
+    await axios.delete(`http://localhost:3001/posts/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // Update the posts state after deletion
+    setPosts(posts.filter(post => post._id !== postId));
+  } catch (error) {
+    console.error('Error deleting post:', error);
+  }
+};
 
   return (
     <Box m="20px">
@@ -91,7 +159,8 @@ const Contacts = () => {
         }}
       >
         <DataGrid
-          rows={mockDataContacts}
+          checkboxSelection
+          rows={formattedPosts}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />
