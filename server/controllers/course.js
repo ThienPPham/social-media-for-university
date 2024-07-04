@@ -117,7 +117,6 @@ export const createPostInCourse = async(req, res) => {
         const { userId, description, picturePath } = req.body;
         const user = await User.findById(userId);
 
-
         const course = await Course.findById(courseId);
         if (!course) {
             return res.status(404).json({ message: "Course not found" });
@@ -131,20 +130,20 @@ export const createPostInCourse = async(req, res) => {
             userPicturePath: user.picturePath,
             picturePath,
             likes: {},
+            isInCourse: true,
         });
 
         await newPost.save();
-
         course.posts.push(newPost._id);
         await course.save();
 
         const updatedCourse = await Course.findById(courseId).populate('posts');
-
         res.status(201).json(updatedCourse);
     } catch (err) {
         res.status(409).json({ message: err.message });
     }
 };
+
 
 export const getCoursePosts = async(req, res) => {
     try {

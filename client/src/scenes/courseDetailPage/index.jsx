@@ -8,6 +8,7 @@ import styles from "./courseDetail.module.css";
 import UserWidget from "scenes/widgets/UserWidget";
 import MyCourseWidget from "scenes/widgets/MyCourseWidget";
 import CoursesWidget from "scenes/widgets/CoursesWidget";
+import { Image } from "@mui/icons-material";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
@@ -29,6 +30,8 @@ const CourseDetail = () => {
       console.error("Error fetching course data:", error);
     }
   };
+
+  console.log('««««« course »»»»»', course);
 
   useEffect(() => {
     getCourse();
@@ -59,7 +62,7 @@ const CourseDetail = () => {
             <main className={styles.mainContent}>
               <div className={styles.mainHeader}>
                 <img
-                  src={course.imageBanner || "../../assets/group.png"}
+                  src={`http://localhost:3001/assets/${course.imageBanner}`}
                   alt="Main Image"
                   className={styles.mainImage}
                 />

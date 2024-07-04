@@ -9,6 +9,7 @@ import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import NewCourse from "scenes/createCoursePage";
 import CourseDetail from "scenes/courseDetailPage";
+import UpdatePost from "components/UpdatePost/UpdatePost";
 
 function App() {
   // const { postId } = useParams();
@@ -49,6 +50,7 @@ function App() {
         </ThemeProvider>
       </BrowserRouter>
     </div>
+    // <UpdatePost />
   );
 }
 

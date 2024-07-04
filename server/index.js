@@ -17,6 +17,7 @@ import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
 import { createPostInCourse } from "./controllers/course.js";
+import { updatePost } from "./controllers/posts.js";
 import User from "./models/User.js";
 import Post from "./models/Post.js";
 import { users, posts } from "./data/index.js"
@@ -54,6 +55,9 @@ const upload = multer({ storage });
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
 app.post("/courses/:courseId/posts", verifyToken, upload.single("picture"), createPostInCourse);
+app.patch("/posts/:id", verifyToken, upload.single("picture"), updatePost);
+
+
 
 
 // ROUTES

@@ -21,7 +21,10 @@ const postSchema = mongoose.Schema({
         type: Map,
         of: Boolean,
     },
-
+    isInCourse: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true });
 
 const Post = mongoose.model("Post", postSchema);
