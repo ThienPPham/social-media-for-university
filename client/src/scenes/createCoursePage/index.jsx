@@ -30,7 +30,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
-
+//comment
 const NewCourse = () => {
   const [isImage, setIsImage] = useState(true);
   const [image, setImage] = useState(null);
