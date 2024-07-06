@@ -57,3 +57,38 @@ export const login = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+// REGISTER ADMIN
+export const registerAdmin = async (req, res) => {
+    try {
+        const {
+            firstName,
+            lastName,
+            email,
+            password,
+            phoneNumber
+        } = req.body;
+
+        // Tạo muối và băm mật khẩu
+        const salt = await bcrypt.genSalt();
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        // Tạo đối tượng người dùng mới với quyền admin
+        const newAdmin = new User({
+            firstName,
+            lastName,
+            email,
+            password: passwordHash,
+            phoneNumber,
+            admin: true,  // Đặt quyền admin là true
+            viewedProfile: Math.floor(Math.random() * 10000),
+            impressions: Math.floor(Math.random() * 10000),
+        });
+
+        // Lưu người dùng mới vào cơ sở dữ liệu
+        const savedAdmin = await newAdmin.save();
+        res.status(201).json(savedAdmin);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

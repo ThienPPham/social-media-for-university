@@ -107,7 +107,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Admin
+                  Sociopedia
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   Admin Dashboard
@@ -162,7 +162,7 @@ const Sidebar = () => {
               Pages
             </Typography>
             <Item
-              title="Profile Form"
+              title="Create Admin"
               to="/admin/form"
               icon={<PersonOutlinedIcon />}
               selected={selected}
