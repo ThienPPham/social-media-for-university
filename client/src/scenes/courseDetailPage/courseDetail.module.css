@@ -1,0 +1,90 @@
+/* MainContent.module.css */
+
+.mainContent {
+  flex: 1;
+  /* background-color: #ffffff; */
+  /* padding: 20px; */
+  border-bottom: 2px solid #2f3132;
+}
+
+.borderBottom {
+  border-bottom: 2px solid #ccc;
+}
+
+.mainImage {
+  width: 100%;
+  max-height: 400px;
+  /* margin-bottom: 20px; */
+}
+
+.mainContent h1 {
+  font-size: 40px;
+  margin-bottom: 10px;
+  color: #333;
+  /* color: #E4E6EB; */
+}
+
+.mainContent p {
+  font-size: 16px;
+  color: #606770;
+  margin-bottom: 20px;
+}
+
+.inviteButton {
+  padding: 10px 20px;
+  background-color: #1877f2;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  /* float: inline-end; */
+  font-size: 17px;
+}
+
+.inviteButton:hover {
+  background-color: #145dbf;
+}
+
+.leaveButton {
+  padding: 10px 20px;
+  background-color: #1877f2;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  /* float: inline-end; */
+  font-size: 17px;
+}
+
+.leaveButton:hover {
+  background-color: #145dbf;
+}
+
+#announcement {
+  color: blue;
+}
+
+#banned {
+  color: red;
+}
+
+.middleHeader {
+  display: flex;
+}
+
+.middleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  /* Optional: Add some margin to separate it from other content */
+}
+
+/* Ensure the image retains its size */
+
+.middleHeader img {
+  width: 40px;
+  height: auto;
+  /* Maintain aspect ratio */
+}
