@@ -94,6 +94,37 @@ const PostWidget = ({
     getDetailPost(); // Fetch post detail when component mounts
   }, []);
 
+  const fetchComments = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch(`http://localhost:3001/comments/${postId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const commentsData = await response.json();
+        setComments(commentsData);
+      } else {
+        setError("Failed to fetch comments");
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      setError("Error fetching comments. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleComments = () => {
+    setShowComments(!showComments);
+    if (!showComments) {
+      fetchComments();
+    }
+  };
+
   // Function to handle like action
   const patchLike = async () => {
     try {
@@ -185,32 +216,6 @@ const PostWidget = ({
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  // Function to update post
-  // const updatePost = async () => {
-  //   try {
-  //     const response = await fetch(`http://localhost:3001/posts/${postId}`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         description: postDetail.description,
-  //         picturePath: postDetail.picturePath,
-  //       }),
-  //     });
-
-  //     if (response.ok) {
-  //       const updatedPost = await response.json();
-  //       setPostDetail(updatedPost); // Update post detail state
-  //       setOpenModal(false); // Close modal after update
-  //     } else {
-  //       console.error("Failed to update post:", response.statusText);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating post:", error);
-  //   }
-  // };
   const updatePost = async () => {
     const formData = new FormData();
     formData.append("description", postDetail.description);
@@ -273,7 +278,7 @@ const PostWidget = ({
             </IconButton>
             <Typography>{likeCount}</Typography>
           </FlexBetween>
-          <IconButton onClick={() => setShowComments(!showComments)}>
+          <IconButton onClick={toggleComments}>
             <ChatBubbleOutlineOutlined />
           </IconButton>
         </FlexBetween>
@@ -291,7 +296,7 @@ const PostWidget = ({
           {loading && <Typography>Loading comments...</Typography>}
           {error && <Typography color="error">{error}</Typography>}
           {!loading && !error && comments.length === 0 && (
-            <Typography>No comments yet.</Typography>
+            <Typography></Typography>
           )}
           {!loading && !error && comments.length > 0 && (
             <Box mt="1rem">
@@ -311,8 +316,9 @@ const PostWidget = ({
                     <ReplyComment
                       commentId={comment._id}
                       onReplyAdded={handleCommentAdded}
-                      fetchReplies={fetchReplies}
+                      fetchReplies={fetchReplies} // Pass fetchReplies function to ReplyComment
                     />
+                    {/* Render replies */}
                     {comment.replies &&
                       comment.replies.map((reply) => (
                         <Box key={reply._id} mt={1}>
