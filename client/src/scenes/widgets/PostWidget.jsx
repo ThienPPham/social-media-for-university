@@ -58,7 +58,7 @@ const PostWidget = ({
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
 
-  // Comment state
+  // State for comments and replies
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -66,7 +66,6 @@ const PostWidget = ({
   const [open, setOpen] = useState(false);
   const [postDetail, setPostDetail] = useState(null); // State to hold post detail
   const [openModal, setOpenModal] = useState(false); // State to manage modal open/close
-
   const [image, setImage] = useState(null);
 
   // Fetch post detail function
@@ -94,6 +93,7 @@ const PostWidget = ({
     getDetailPost(); // Fetch post detail when component mounts
   }, []);
 
+  // Fetch comments function
   const fetchComments = async () => {
     setLoading(true);
     setError("");
@@ -118,6 +118,7 @@ const PostWidget = ({
     }
   };
 
+  // Toggle comments visibility
   const toggleComments = () => {
     setShowComments(!showComments);
     if (!showComments) {
@@ -125,7 +126,7 @@ const PostWidget = ({
     }
   };
 
-  // Function to handle like action
+  // Handle like action
   const patchLike = async () => {
     try {
       const response = await fetch(
@@ -150,12 +151,12 @@ const PostWidget = ({
     }
   };
 
-  // Function to handle comment addition
+  // Handle comment addition
   const handleCommentAdded = (newComment) => {
     setComments((prevComments) => [...prevComments, newComment]);
   };
 
-  // Function to fetch replies of a comment
+  // Fetch replies of a comment
   const fetchReplies = async (commentId) => {
     try {
       const response = await fetch(
@@ -183,7 +184,7 @@ const PostWidget = ({
     }
   };
 
-  // Function to delete the post
+  // Handle delete post
   const deletePost = async () => {
     try {
       const response = await fetch(`http://localhost:3001/posts/${postId}`, {
@@ -204,7 +205,7 @@ const PostWidget = ({
     }
   };
 
-  // Dialog controls
+  // Handle delete confirmation dialog
   const handleDeleteClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleConfirmDelete = () => {
@@ -216,6 +217,7 @@ const PostWidget = ({
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
+  // Update post details
   const updatePost = async () => {
     const formData = new FormData();
     formData.append("description", postDetail.description);
@@ -296,7 +298,7 @@ const PostWidget = ({
           {loading && <Typography>Loading comments...</Typography>}
           {error && <Typography color="error">{error}</Typography>}
           {!loading && !error && comments.length === 0 && (
-            <Typography></Typography>
+            <Typography>No comments yet.</Typography>
           )}
           {!loading && !error && comments.length > 0 && (
             <Box mt="1rem">
@@ -315,8 +317,16 @@ const PostWidget = ({
                     {comment.comment}
                     <ReplyComment
                       commentId={comment._id}
-                      onReplyAdded={handleCommentAdded}
-                      fetchReplies={fetchReplies} // Pass fetchReplies function to ReplyComment
+                      onReplyAdded={(reply) => {
+                        // Update replies immediately
+                        const updatedComments = comments.map((c) =>
+                          c._id === comment._id
+                            ? { ...c, replies: [...c.replies, reply] }
+                            : c
+                        );
+                        setComments(updatedComments);
+                      }}
+                      fetchReplies={fetchReplies}
                     />
                     {/* Render replies */}
                     {comment.replies &&
@@ -413,7 +423,6 @@ const PostWidget = ({
                       description: e.target.value,
                     })
                   }
-                  // onChange={(e) => setEditingDescription(e.target.value)}
                   multiline
                   rows={4}
                   sx={{ mb: 2 }}
@@ -434,7 +443,7 @@ const PostWidget = ({
                       >
                         <input {...getInputProps()} />
                         {!image ? (
-                          <p>Sửa ảnh tại đây</p>
+                          <p>Edit image here</p>
                         ) : (
                           <FlexBetween>
                             <Typography>{image.name}</Typography>
@@ -454,24 +463,6 @@ const PostWidget = ({
                   )}
                 </Dropzone>
 
-                {/* <div className={styles.content}>
-                  <textarea
-                    value={postDetail.description}
-                    onChange={(e) =>
-                      setPostDetail({
-                        ...postDetail,
-                        description: e.target.value,
-                      })
-                    }
-                    className={styles.description}
-                  />
-                  {postDetail.picturePath && (
-                    <img
-                      src={`http://localhost:3001/assets/${postDetail.picturePath}`}
-                      className={styles.postImage}
-                    />
-                  )}
-                </div> */}
                 <div className={styles.actions}>
                   <button onClick={updatePost} className={styles.saveButton}>
                     Save

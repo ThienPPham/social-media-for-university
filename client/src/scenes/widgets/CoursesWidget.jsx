@@ -40,6 +40,10 @@ const CoursesWidget = ({ courseId, isCourse = false }) => {
     }
   }, [isCourse, courseId]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const handleDeletePost = (postId) => {
+    dispatch(setPosts({ posts: posts.filter((post) => post._id !== postId) }));
+  };
+
   return (
     <>
       {Array.isArray(posts) ? (
@@ -67,6 +71,7 @@ const CoursesWidget = ({ courseId, isCourse = false }) => {
               userPicturePath={userPicturePath}
               likes={likes}
               comments={comments}
+              onDelete={handleDeletePost}
             />
           )
         )
