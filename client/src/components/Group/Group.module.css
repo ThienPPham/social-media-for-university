@@ -1,0 +1,11 @@
+.groups {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.groups img {
+    width: 90px;
+    height: 90px;
+    margin-right: 10px;
+}

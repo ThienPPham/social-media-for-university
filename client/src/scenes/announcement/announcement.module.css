@@ -1,0 +1,16 @@
+.new {
+  cursor: pointer;
+  background-color: lightblue;
+}
+.old {
+  background-color: #e5d6aa;
+}
+.newText {
+  font-weight: bold;
+  font-size: 15px;
+  color: red;
+}
+.oldText {
+  display: none;
+  color: black;
+}
