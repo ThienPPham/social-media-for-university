@@ -25,7 +25,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 
-const MyPostWidget = ({ picturePath }) => {
+const MyCourseWidget = ({ picturePath, courseId }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
@@ -46,7 +46,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
 
-    const response = await fetch(`http://localhost:3001/posts`, {
+    const response = await fetch(`http://localhost:3001/courses/${courseId}/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -55,6 +55,7 @@ const MyPostWidget = ({ picturePath }) => {
     dispatch(setPosts({ posts }));
     setImage(null);
     setPost("");
+    window.location.reload(true); // Reload the page
   };
 
   return (
@@ -62,7 +63,7 @@ const MyPostWidget = ({ picturePath }) => {
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
-          placeholder="Bạn đang nghĩ gì thế ?"
+          placeholder="Bạn đang nghĩ gì thế?"
           onChange={(e) => setPost(e.target.value)}
           value={post}
           sx={{
@@ -170,4 +171,4 @@ const MyPostWidget = ({ picturePath }) => {
   );
 };
 
-export default MyPostWidget;
+export default MyCourseWidget;

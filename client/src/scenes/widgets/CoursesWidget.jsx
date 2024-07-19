@@ -1,41 +1,44 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const CoursesWidget = ({ courseId, isCourse = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
+  // const [course, setCourse] = useState("");
   const token = useSelector((state) => state.token);
 
   const getPosts = async () => {
-    const response = await fetch("http://localhost:3001/posts/not-in-course", {
+    const response = await fetch("http://localhost:3001/posts", {
       method: "GET",
-      // headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
   };
 
-  const getUserPosts = async () => {
+  const getUserCourses = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
+      `http://localhost:3001/courses/${courseId}/posts`,
       {
         method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
+        // headers: { Authorization: `Bearer ${token}` },
       }
     );
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
+    console.log('««««« data1 »»»»»', data);
+
   };
 
   useEffect(() => {
-    if (isProfile) {
-      getUserPosts();
+    if (isCourse) {
+      getUserCourses();
     } else {
       getPosts();
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isCourse, courseId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDeletePost = (postId) => {
     dispatch(setPosts({ posts: posts.filter((post) => post._id !== postId) }));
@@ -79,4 +82,4 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   );
 };
 
-export default PostsWidget;
+export default CoursesWidget;

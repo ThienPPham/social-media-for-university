@@ -3,7 +3,9 @@ import {
   EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
+  School,
 } from "@mui/icons-material";
+// import {SchoolIcon} from '@mui/icons-material/School';
 import { Box, Typography, Divider, useTheme } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
@@ -14,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
+  const [courses, setCourses] = useState("");
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
@@ -30,9 +33,31 @@ const UserWidget = ({ userId, picturePath }) => {
     setUser(data);
   };
 
+  const getUserCourses = async () => {
+    const response = await fetch(
+      `http://localhost:3001/courses/${userId}/detail`,
+      {
+        method: "GET",
+        // headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const data = await response.json();
+    return data;
+  };
+
   useEffect(() => {
-    getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const fetchData = async () => {
+      await getUser();
+      const userCourses = await getUserCourses();
+      setCourses(userCourses);
+    };
+
+    fetchData();
+  }, []);
+
+  // useEffect(() => {
+  //   getUser();
+  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return null;
@@ -95,7 +120,43 @@ const UserWidget = ({ userId, picturePath }) => {
       <Divider />
 
       {/* THIRD ROW */}
+      {/* <Box p="1rem 0">
+        <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
+          <School fontSize="large" sx={{ color: main }} />
+          <Typography color={medium}>khóa học môn Lab</Typography>
+          <EditOutlined sx={{ color: main }} />
+        </Box>
+        
+      </Box> */}
       <Box p="1rem 0">
+        <Typography fontSize="1.25rem" fontWeight="500" mb="0.5rem">
+          Khóa học do bạn quản lí
+        </Typography>
+        {courses.length > 0 ? (
+          courses.map((course) => (
+            <Box
+              display="flex"
+              alignItems="center"
+              gap="1rem"
+              mb="0.5rem"
+              onClick={() => navigate(`/courses/${course._id}`)}
+              style={{ cursor: "pointer" }}
+            >
+              <School fontSize="large" sx={{ color: main }} />
+              <Typography color={dark} fontWeight="500">
+                {course.name}
+              </Typography>
+            </Box>
+          ))
+        ) : (
+          <Typography color={medium}>No courses available</Typography>
+        )}
+      </Box>
+
+      <Divider />
+
+      {/* FOUR ROW */}
+      {/* <Box p="1rem 0">
         <FlexBetween mb="0.5rem">
           <Typography color={medium}>Who's viewed your profile</Typography>
           <Typography color={main} fontWeight="500">
@@ -108,11 +169,17 @@ const UserWidget = ({ userId, picturePath }) => {
             {impressions}
           </Typography>
         </FlexBetween>
+      </Box> */}
+
+      <Box p="1rem 0">
+        <Typography fontSize="1.25rem" fontWeight="500" mb="0.5rem">
+          Khóa học mà bạn tham gia
+        </Typography>
       </Box>
 
       <Divider />
 
-      {/* FOURTH ROW */}
+      {/* FIVE ROW */}
       <Box p="1rem 0">
         <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
           Social Profiles

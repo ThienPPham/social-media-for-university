@@ -93,7 +93,6 @@ const Form = () => {
           token: loggedIn.token,
         })
       );
-      localStorage.setItem('token', loggedIn.token);
       navigate("/home");
     }
   };

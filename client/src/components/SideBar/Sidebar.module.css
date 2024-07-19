@@ -1,0 +1,45 @@
+.sidebar {
+    width: 300px;
+    background-color: #f1f1f1;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.menu a,
+.menu button {
+    display: block;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+.menu button {
+    background-color: #1877f2;
+    color: white;
+}
+
+.managedGroup,
+.joinedGroups {
+    margin-top: 20px;
+}
+
+.managedGroup h3,
+.joinedGroups h3 {
+    margin-bottom: 10px;
+}
+
+.newGroup {
+    width: 100%;
+    border-radius: 10px;
+}
