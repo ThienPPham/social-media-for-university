@@ -62,7 +62,7 @@ const MyPostWidget = ({ picturePath }) => {
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
-          placeholder="What's on your mind..."
+          placeholder="Bạn đang nghĩ gì thế ?"
           onChange={(e) => setPost(e.target.value)}
           value={post}
           sx={{
@@ -96,7 +96,7 @@ const MyPostWidget = ({ picturePath }) => {
                 >
                   <input {...getInputProps()} />
                   {!image ? (
-                    <p>Add Image Here</p>
+                    <p>Thêm ảnh tại đây</p>
                   ) : (
                     <FlexBetween>
                       <Typography>{image.name}</Typography>
@@ -127,7 +127,7 @@ const MyPostWidget = ({ picturePath }) => {
             color={mediumMain}
             sx={{ "&:hover": { cursor: "pointer", color: medium } }}
           >
-            Image
+            Ảnh
           </Typography>
         </FlexBetween>
 
@@ -135,17 +135,17 @@ const MyPostWidget = ({ picturePath }) => {
           <>
             <FlexBetween gap="0.25rem">
               <GifBoxOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Clip</Typography>
+              <Typography color={mediumMain}>Video</Typography>
             </FlexBetween>
 
             <FlexBetween gap="0.25rem">
               <AttachFileOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Attachment</Typography>
+              <Typography color={mediumMain}>Tệp</Typography>
             </FlexBetween>
 
             <FlexBetween gap="0.25rem">
               <MicOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Audio</Typography>
+              <Typography color={mediumMain}>Âm Thanh</Typography>
             </FlexBetween>
           </>
         ) : (
@@ -163,7 +163,7 @@ const MyPostWidget = ({ picturePath }) => {
             borderRadius: "3rem",
           }}
         >
-          POST
+          Đăng
         </Button>
       </FlexBetween>
     </WidgetWrapper>

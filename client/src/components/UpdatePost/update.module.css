@@ -1,0 +1,90 @@
+/* src/Post.module.css */
+
+.post {
+    background-color: white;
+    width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin: 20px auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.profilePic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.badge {
+    /* background-color: #f0f0f0; */
+    padding: 2px 1px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.content {
+    margin-bottom: 16px;
+}
+
+.postImage {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    /* Add some space between actions and save button */
+}
+
+.actions button {
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.icons {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    margin-left: 12px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.saveButton {
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    /* Center the save button */
+}
