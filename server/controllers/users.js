@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Course from "../models/Course.js";
 
 // READ
 export const getUser = async (req, res) => {
@@ -93,6 +94,27 @@ export const getAllUserJoinCourse = async (req, res) => {
     }
     //, users.lastName, users.picturePath, users._id
     res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get All Course That User had Joined
+
+export const getAllCourseJoining = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    const course = await Course.find();
+    let courseJoining = [];
+    for (let i = 0; i < course.length; i++) {
+      for (let j = 0; j < user.courseJoin.length; j++) {
+        if (course[i]._id.toString() === user.courseJoin[j]) {
+          courseJoining.push(course[i]);
+        }
+      }
+    }
+    res.status(200).json(courseJoining);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -9,11 +9,13 @@ import UserWidget from "scenes/widgets/UserWidget";
 import MyCourseWidget from "scenes/widgets/MyCourseWidget";
 import CoursesWidget from "scenes/widgets/CoursesWidget";
 import { AltRoute, AlternateEmail } from "@mui/icons-material";
+import UserImage from "components/UserImage";
 import { useNavigate } from "react-router-dom";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
+  const [userJoinCourse, setUserJoinCourse] = useState([]);
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath, courseJoin } = useSelector((state) => state.user);
@@ -38,6 +40,31 @@ const CourseDetail = () => {
 
   // if (!user) return null;
   //Get User (End)
+
+  const getAllUserJoinCourse = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/users/${courseId}/userJoinCourse`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setUserJoinCourse(data);
+    } catch (error) {
+      console.error("Error fetching users data:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAllUserJoinCourse();
+  }, [courseId]);
 
   const getCourse = async () => {
     try {
@@ -342,8 +369,13 @@ const CourseDetail = () => {
                 <h1>{course.name}</h1>
                 <p>Private Group · {course.numberOfMembers} members</p>
               </div>
+
               <div className={styles.middleHeader}>
-                <img src={"../../assets/group.png"} alt="Course Image" />
+                <div className={styles.memberImage}>
+                  {userJoinCourse.map((data) => (
+                    <UserImage image={data.picturePath} />
+                  ))}
+                </div>
                 {checkBanned ? (
                   <h3 id={styles.banned}>
                     {" "}

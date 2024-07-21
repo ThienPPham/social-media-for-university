@@ -13,6 +13,7 @@ import {
   deleteAnnouncement,
   getAllUsers,
   updateUserStatus,
+  getAllCourseJoining,
 } from "../controllers/users.js";
 import { verifyToken } from "../middleware/auth.js";
 
@@ -22,6 +23,7 @@ const router = express.Router();
 router.get("/:id", verifyToken, getUser);
 router.get("/:id/friends", verifyToken, getUserFriends);
 router.get("/:courseId/userJoinCourse", verifyToken, getAllUserJoinCourse);
+router.get("/:userId/courseJoining", verifyToken, getAllCourseJoining);
 // GET ALL USERS
 router.get("/", getAllUsers);
 

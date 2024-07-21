@@ -76,6 +76,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* margin-left: 85%; */
   margin-top: 20px;
   margin-bottom: 30px;
   /* Optional: Add some margin to separate it from other content */
@@ -83,8 +84,13 @@
 
 /* Ensure the image retains its size */
 
-.middleHeader img {
-  width: 40px;
-  height: auto;
+.middleHeader UserImage {
+  width: 10px !important;
+  height: 10px !important;
+  margin-right: 10px !important;
   /* Maintain aspect ratio */
+}
+
+.memberImage {
+  display: flex;
 }

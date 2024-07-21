@@ -15,17 +15,19 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../courseDetailPage/courseDetail.module.css";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 
 const UserWidget = ({ picturePath }) => {
   const [user, setUser] = useState(null);
   const [courses, setCourses] = useState("");
+  const [courseJoining, setCourseJoining] = useState([]);
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
-  const [course2, setCourse2] = useState(null);
+  const [course2, setCourse2] = useState([]);
   const [userDataRequest, setUserDataRequest] = useState(null);
   const { courseId } = useParams();
   const { _id } = useSelector((state) => state.user);
@@ -97,6 +99,27 @@ const UserWidget = ({ picturePath }) => {
       await getUser();
       const userCourses = await getUserCourses();
       setCourses(userCourses);
+    };
+
+    fetchData();
+  }, []);
+
+  const getAllCourseJoining = async () => {
+    const response = await fetch(
+      `http://localhost:3001/users/${_id}/courseJoining`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const data = await response.json();
+    return data;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userCoursesJoining = await getAllCourseJoining();
+      setCourseJoining(userCoursesJoining);
     };
 
     fetchData();
@@ -428,7 +451,8 @@ const UserWidget = ({ picturePath }) => {
               onClick={() => navigate(`/courses/${course._id}`)}
               style={{ cursor: "pointer" }}
             >
-              <School fontSize="large" sx={{ color: main }} />
+              <SupervisorAccountIcon fontSize="large" sx={{ color: main }} />
+              {/* <School fontSize="large" sx={{ color: main }} /> */}
               <Typography color={dark} fontWeight="500">
                 {course.name}
               </Typography>
@@ -509,6 +533,25 @@ const UserWidget = ({ picturePath }) => {
         <Typography fontSize="1.25rem" fontWeight="500" mb="0.5rem">
           Khóa học mà bạn tham gia
         </Typography>
+        {courseJoining.length > 0 ? (
+          courseJoining.map((course) => (
+            <Box
+              display="flex"
+              alignItems="center"
+              gap="1rem"
+              mb="0.5rem"
+              onClick={() => navigate(`/courses/${course._id}`)}
+              style={{ cursor: "pointer" }}
+            >
+              <School fontSize="large" sx={{ color: main }} />
+              <Typography color={dark} fontWeight="500">
+                {course.name}
+              </Typography>
+            </Box>
+          ))
+        ) : (
+          <Typography color={medium}>No courses available</Typography>
+        )}
       </Box>
 
       <Divider />
