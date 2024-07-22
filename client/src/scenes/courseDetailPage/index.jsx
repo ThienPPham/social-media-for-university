@@ -338,85 +338,93 @@ const CourseDetail = () => {
   };
 
   return (
-    <Box>
-      <Navbar />
-      <Box
-        width="100%"
-        padding="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
-        gap="2rem"
-      >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget
-            userId={_id}
-            picturePath={picturePath}
-            // courseId={courseId}
-          />
-        </Box>
+    <>
+      {user !== null ? (
+        <Box>
+          <Navbar />
+          <Box
+            width="100%"
+            padding="2rem 6%"
+            display={isNonMobileScreens ? "flex" : "block"}
+            gap="2rem"
+          >
+            <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+              <UserWidget
+                userId={_id}
+                picturePath={picturePath}
+                // courseId={courseId}
+              />
+            </Box>
 
-        <Box
-          flexBasis={isNonMobileScreens ? "68%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
-        >
-          <div>
-            <main className={styles.mainContent}>
-              <div className={styles.mainHeader}>
-                <img
-                  src={`http://localhost:3001/assets/${course.imageBanner}`}
-                  alt="Main Image 123"
-                  className={styles.mainImage}
-                />
-                <h1>{course.name}</h1>
-                <p>Private Group · {course.numberOfMembers} members</p>
-              </div>
-
-              <div className={styles.middleHeader}>
-                <div className={styles.memberImage}>
+            <Box
+              flexBasis={isNonMobileScreens ? "68%" : undefined}
+              mt={isNonMobileScreens ? undefined : "2rem"}
+            >
+              <div>
+                <main className={styles.mainContent}>
+                  <div className={styles.mainHeader}>
+                    <img
+                      src={`http://localhost:3001/assets/${course.picturePath}`}
+                      alt="Main Image 123"
+                      className={styles.mainImage}
+                    />
+                    <h1>{course.name}</h1>
+                    <p>Private Group · {course.numberOfMembers} members</p>
+                  </div>
+                  <div className={styles.middleHeader}>
+                  <div className={styles.memberImage}>
                   {userJoinCourse.map((data) => (
                     <UserImage image={data.picturePath} />
                   ))}
                 </div>
-                {checkBanned ? (
-                  <h3 id={styles.banned}>
-                    {" "}
-                    Bạn Đã Bị Cấm Vào Nhóm Vĩnh Viễn !{" "}
-                  </h3>
-                ) : checkAnnouncemenet ? (
-                  <h3 id={styles.announcement}>
-                    Vui Lòng Đợi Admin Phê Duyệt Vào Nhóm !
-                  </h3>
-                ) : user.courseJoin.includes(courseId) ? (
-                  <button
-                    className={styles.inviteButton}
-                    id="leaveButton"
-                    onClick={handleClickLeaveCourse}
-                  >
-                    Rời nhóm
-                  </button>
-                ) : (
-                  <button
-                    className={styles.inviteButton}
-                    id="inviteButton"
-                    onClick={handleClickJoinCourse}
-                  >
-                    Vào Nhóm
-                  </button>
-                )}
+                    {checkBanned ? (
+                      <h3 id={styles.banned}>
+                        {" "}
+                        Bạn Đã Bị Cấm Vào Nhóm Vĩnh Viễn !{" "}
+                      </h3>
+                    ) : checkAnnouncemenet ? (
+                      <h3 id={styles.announcement}>
+                        Vui Lòng Đợi Admin Phê Duyệt Vào Nhóm !
+                      </h3>
+                    ) : user.courseJoin.includes(courseId) ? (
+                      <button
+                        className={styles.inviteButton}
+                        id="leaveButton"
+                        onClick={handleClickLeaveCourse}
+                      >
+                        Rời nhóm
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.inviteButton}
+                        id="inviteButton"
+                        onClick={handleClickJoinCourse}
+                      >
+                        Vào Nhóm
+                      </button>
+                    )}
+                  </div>
+                  <div className={styles.description}>
+                    <p>{course.description}</p>
+                  </div>
+                </main>
               </div>
-              <div className={styles.description}>
-                <p>{course.description}</p>
-              </div>
-            </main>
-          </div>
-          {user.courseJoin.includes(courseId) ? (
-            <>
-              <MyCourseWidget picturePath={picturePath} courseId={courseId} />
-              <CoursesWidget courseId={courseId} isCourse />
-            </>
-          ) : null}
+              {user.courseJoin.includes(courseId) ? (
+                <>
+                  <MyCourseWidget
+                    picturePath={picturePath}
+                    courseId={courseId}
+                  />
+                  <CoursesWidget courseId={courseId} isCourse />
+                </>
+              ) : null}
+            </Box>
+          </Box>
         </Box>
-      </Box>
-    </Box>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 

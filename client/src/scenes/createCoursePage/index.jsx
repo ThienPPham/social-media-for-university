@@ -41,6 +41,7 @@ const NewCourse = () => {
   const medium = palette.neutral.medium;
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id } = useSelector((state) => state.user);
+  const { picturePath } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const [nameCourse, setNameCourse] = useState("");
   const [desCourse, setDesCourse] = useState("");
@@ -143,7 +144,8 @@ const NewCourse = () => {
           <div className={styles.userInfo}>
             <div>
               <img
-                src="../../assets/group.png"
+                // src="../../assets/group.png"
+                src={`http://localhost:3001/assets/${picturePath}`}
                 alt="User Icon"
                 className={styles.userIcon}
               />

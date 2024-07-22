@@ -28,7 +28,7 @@ const UserWidget = ({ picturePath }) => {
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
   const [course2, setCourse2] = useState([]);
-  const [userDataRequest, setUserDataRequest] = useState(null);
+  const [userDataRequest, setUserDataRequest] = useState([]);
   const { courseId } = useParams();
   const { _id } = useSelector((state) => state.user);
   // const userId = _id;
