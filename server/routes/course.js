@@ -1,19 +1,19 @@
 import express from "express";
 import {
-  createCourse,
-  getCourses,
-  getUserCourses,
-  updateCourse,
-  getCoursesById,
-  getCoursePosts,
-  getNewestCourse,
-  deleteCourse,
-  sendRequestJoinCourse,
-  getDataUserRequest,
-  deleteRequestJoinCourese,
-  updateAnnouncement,
-  deleteAnnouncement,
-  updateAnnouncementStatus,
+    createCourse,
+    getCourses,
+    getUserCourses,
+    updateCourse,
+    getCoursesById,
+    getCoursePosts,
+    getNewestCourse,
+    deleteCourse,
+    sendRequestJoinCourse,
+    getDataUserRequest,
+    deleteRequestJoinCourese,
+    updateAnnouncement,
+    deleteAnnouncement,
+    updateAnnouncementStatus,
 } from "../controllers/course.js";
 import { verifyToken } from "../middleware/auth.js";
 
@@ -34,18 +34,18 @@ router.put("/update/:id", verifyToken, updateCourse);
 router.put("/:courseId/requestJoinCourse", verifyToken, sendRequestJoinCourse);
 router.put("/:courseId/announcement", verifyToken, updateAnnouncement);
 router.put(
-  "/:courseId/announcementStatus",
-  verifyToken,
-  updateAnnouncementStatus
+    "/:courseId/announcementStatus",
+    verifyToken,
+    updateAnnouncementStatus
 );
 
 // Delete
 // router.delete("/:id", verifyToken, deleteCourse);
 router.delete("/:courseId", verifyToken, deleteCourse);
 router.delete(
-  "/:userId/deleteRequestJoinCourese",
-  verifyToken,
-  deleteRequestJoinCourese
+    "/:userId/deleteRequestJoinCourese",
+    verifyToken,
+    deleteRequestJoinCourese
 );
 router.delete("/:courseId/deleteAnnouncement", verifyToken, deleteAnnouncement);
 

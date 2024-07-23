@@ -15,12 +15,13 @@ import GroupManagement from "scenes/courseManagement/groupManagement";
 import Announcement from "scenes/courseManagement/Announcement";
 import AnnouncementUser from "scenes/announcement/index";
 import CourseManagementLayout from "scenes/courseManagement/courseManagementLayout";
+import PrivateRoute from "scenes/PrivateRoute/PrivateRoute";
 
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const isAuth = Boolean(useSelector((state) => state.token));
-
+  const isAdmin = useSelector((state) => state.user?.admin);
   return (
     <div className="app">
       <BrowserRouter>
@@ -70,7 +71,10 @@ function App() {
                 element={isAuth ? <Announcement /> : <Navigate to="/" />}
               />
             </Route>
-            <Route path="/admin/*" element={<AdminApp />} />
+            <Route
+              path="/admin/*"
+              element={<PrivateRoute element={<AdminApp />} requiredRole={true} />}
+            />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
