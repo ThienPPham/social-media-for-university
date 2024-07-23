@@ -54,35 +54,37 @@ const GroupManagement = () => {
   }, [courseId]);
 
   const handleUpdateGroup = async () => {
-    const name = nameUpdate;
-    const description = descriptionUpdate;
-    let imageBanner = null;
-    if (image !== null) {
-      imageBanner = image.name;
+    const formData = new FormData();
+    if (nameUpdate) {
+      formData.append("name", nameUpdate);
     }
-
-    const picture = image;
+    if (descriptionUpdate) {
+      formData.append("description", descriptionUpdate);
+    }
+    if (image) {
+      formData.append("imageBanner", image.name);
+      formData.append("picture", image);
+    }
     const response = await fetch(
       `http://localhost:3001/courses/${courseId}/update`,
       {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ name, description, imageBanner, picture }),
+        body: formData,
       }
     );
+
     const data = await response.json();
     if (response.ok) {
-      alert("Course is updated successfully !");
+      alert("Course is updated successfully!");
       setNameUpdate(null);
       setDescriptionUpdate(null);
       setImage(null);
     } else {
       console.error("Error creating course:", data.message);
     }
-    // };
   };
 
   const handleDeleteGroup = async () => {

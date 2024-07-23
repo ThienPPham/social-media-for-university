@@ -68,26 +68,21 @@ const NewCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let imageName;
-    let picture;
+    const formData = new FormData();
+    formData.append("userId", _id);
+    formData.append("name", nameCourse);
+    formData.append("description", desCourse);
     if (image) {
-      // alert(image.name);
-      imageName = image.name;
-      picture = image;
+      formData.append("imageBanner", image.name);
+      formData.append("picture", image);
     }
+
     const response = await fetch("http://localhost:3001/courses/create", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Attach the token to the request
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        userId: _id,
-        name: nameCourse,
-        imageBanner: imageName,
-        picture: picture,
-        description: desCourse,
-      }),
+      body: formData,
     });
 
     const data = await response.json();
@@ -95,8 +90,8 @@ const NewCourse = () => {
     if (response.ok) {
       console.log("Course created successfully:", data);
       setImage(null);
-      setNameCourse(null);
-      setDesCourse(null);
+      setNameCourse("");
+      setDesCourse("");
 
       const getNewestCourse = async () => {
         const response = await fetch(
