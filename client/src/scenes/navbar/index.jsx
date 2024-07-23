@@ -99,7 +99,7 @@ const Navbar = () => {
   }, []);
 
   const handleClickNotify = () => {
-    alert("Notification");
+    // alert("Notification");
     navigate("/announcement");
   };
 

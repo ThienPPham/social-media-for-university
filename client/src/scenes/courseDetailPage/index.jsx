@@ -364,7 +364,7 @@ const CourseDetail = () => {
                 <main className={styles.mainContent}>
                   <div className={styles.mainHeader}>
                     <img
-                      src={`http://localhost:3001/assets/${course.picturePath}`}
+                      src={`http://localhost:3001/assets/${course.imageBanner}`}
                       alt="Main Image 123"
                       className={styles.mainImage}
                     />
@@ -372,11 +372,11 @@ const CourseDetail = () => {
                     <p>Private Group · {course.numberOfMembers} members</p>
                   </div>
                   <div className={styles.middleHeader}>
-                  <div className={styles.memberImage}>
-                  {userJoinCourse.map((data) => (
-                    <UserImage image={data.picturePath} />
-                  ))}
-                </div>
+                    <div className={styles.memberImage}>
+                      {userJoinCourse.map((data) => (
+                        <UserImage image={data.picturePath} />
+                      ))}
+                    </div>
                     {checkBanned ? (
                       <h3 id={styles.banned}>
                         {" "}

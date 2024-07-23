@@ -228,7 +228,7 @@ function MemberManagement() {
     };
     const leaveResult = leaveCourse(courseId, userId);
     if (leaveResult) {
-      alert("Successfully Kick User Out Of The Group !");
+      // alert("Successfully Kick User Out Of The Group !");
       getAllUserJoinCourse();
     }
 
