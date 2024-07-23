@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const postSchema = mongoose.Schema({
     userId: {
         type: String,
@@ -34,6 +35,7 @@ const postSchema = mongoose.Schema({
         default: false,
     },
 }, { timestamps: true });
+
 
 const Post = mongoose.model("Post", postSchema);
 

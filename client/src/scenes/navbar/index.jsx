@@ -67,7 +67,7 @@ const Navbar = () => {
 
   const handleSearch = () => {
     if (searchQuery) {
-      const filtered = courses.filter(course =>
+      const filtered = courses.filter((course) =>
         course.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredCourses(filtered);
@@ -97,6 +97,11 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleClickNotify = () => {
+    alert("Notification");
+    navigate("/announcement");
+  };
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt} position="relative">
@@ -180,7 +185,10 @@ const Navbar = () => {
             )}
           </IconButton>
           <Message sx={{ fontSize: "25px" }} />
-          <Notifications sx={{ fontSize: "25px" }} />
+          <Notifications
+            sx={{ fontSize: "25px", cursor: "pointer" }}
+            onClick={handleClickNotify}
+          />
           <Help sx={{ fontSize: "25px" }} />
           <FormControl variant="standard" value={fullName}>
             <Select

@@ -42,10 +42,26 @@ const courseSchema = mongoose.Schema({
             type: String,
             // required: true,
         },
+        IdUserRequest: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }, ],
+        announcement: [{
+            date: {
+                type: String,
+            },
+            mess: {
+                type: String,
+            },
+            isNew: {
+                type: Boolean,
+                default: true,
+            },
+        }, ],
         posts: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Post"
-        }],
+            ref: "Post",
+        }, ],
     }, { timestamps: true } // Automatically add createdAt and updatedAt timestamps
 );
 

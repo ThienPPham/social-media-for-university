@@ -11,10 +11,11 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
-import courseRoutes from "./routes/course.js"
-import commentRoutes from "./routes/comment.js"
+import courseRoutes from "./routes/course.js";
+import commentRoutes from "./routes/comment.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
+import { createCourse, updateCourse } from "./controllers/course.js";
 import { verifyToken } from "./middleware/auth.js";
 import { createPostInCourse } from "./controllers/course.js";
 import { updatePost } from "./controllers/posts.js";
@@ -35,7 +36,7 @@ app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
-app.use("/assets", express.static(path.join(__dirname, 'public/assets')));
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 // FILE STORAGE
 const storage = multer.diskStorage({
@@ -44,7 +45,7 @@ const storage = multer.diskStorage({
     },
     filename: function(req, file, cb) {
         cb(null, file.originalname);
-    }
+    },
 });
 
 const upload = multer({ storage });
@@ -52,7 +53,25 @@ const upload = multer({ storage });
 // ROUTES WITH FILES
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
-app.post("/courses/:courseId/posts", verifyToken, upload.single("picture"), createPostInCourse);
+app.post(
+    "/courses/:courseId/posts",
+    verifyToken,
+    upload.single("picture"),
+    createPostInCourse
+);
+app.post(
+    "/courses/create",
+    verifyToken,
+    upload.single("picture"),
+    createCourse
+);
+app.put(
+    "/courses/:courseId/update",
+    verifyToken,
+    upload.single("picture"),
+    updateCourse
+);
+
 app.patch("/posts/:id", verifyToken, upload.single("picture"), updatePost);
 
 // ROUTES
@@ -64,7 +83,8 @@ app.use("/comments", commentRoutes);
 
 // MONGOOSE SETUP
 const PORT = process.env.PORT || 6001;
-mongoose.connect(process.env.MONGO_URL, {})
+mongoose
+    .connect(process.env.MONGO_URL, {})
     .then(() => {
         app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 

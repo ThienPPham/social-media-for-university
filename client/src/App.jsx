@@ -10,12 +10,18 @@ import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import NewCourse from "scenes/createCoursePage";
 import CourseDetail from "scenes/courseDetailPage";
+import MemberManagement from "scenes/courseManagement/memberManagement";
+import GroupManagement from "scenes/courseManagement/groupManagement";
+import Announcement from "scenes/courseManagement/Announcement";
+import AnnouncementUser from "scenes/announcement/index";
+import CourseManagementLayout from "scenes/courseManagement/courseManagementLayout";
+import PrivateRoute from "scenes/PrivateRoute/PrivateRoute";
 
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const isAuth = Boolean(useSelector((state) => state.token));
-
+  const isAdmin = useSelector((state) => state.user?.admin);
   return (
     <div className="app">
       <BrowserRouter>
@@ -26,6 +32,10 @@ function App() {
             <Route
               path="/home"
               element={isAuth ? <HomePage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/announcement"
+              element={isAuth ? <AnnouncementUser /> : <Navigate to="/" />}
             />
             <Route
               path="/profile/:userId"
@@ -40,7 +50,31 @@ function App() {
               path="/courses/:courseId"
               element={isAuth ? <CourseDetail /> : <Navigate to="/" />}
             />
-            <Route path="/admin/*" element={<AdminApp />} />
+            <Route
+              path="/courses/:courseId/ManageGroup"
+              element={
+                isAuth ? <CourseManagementLayout /> : <Navigate to="/" />
+              }
+            >
+              <Route
+                path="/courses/:courseId/ManageGroup/member"
+                element={isAuth ? <MemberManagement /> : <Navigate to="/" />}
+              />
+
+              <Route
+                path="/courses/:courseId/ManageGroup/group"
+                element={isAuth ? <GroupManagement /> : <Navigate to="/" />}
+              />
+
+              <Route
+                path="/courses/:courseId/ManageGroup/announcement"
+                element={isAuth ? <Announcement /> : <Navigate to="/" />}
+              />
+            </Route>
+            <Route
+              path="/admin/*"
+              element={<PrivateRoute element={<AdminApp />} requiredRole={true} />}
+            />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
